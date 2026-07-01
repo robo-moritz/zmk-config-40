@@ -23,7 +23,7 @@
     kscan0: kscan_composite {
         compatible = "zmk,kscan-gpio-matrix";
         label = "KSCAN";
-        diode-direction = "col2row"; // Falls Tasten später nicht reagieren, in "row2col" ändern
+        diode-direction = "row2col"; // Falls Tasten später nicht reagieren, in "row2col" ändern
 
         // Horizontale Pins (Rows 1-4)
         row-gpios
