@@ -1,4 +1,9 @@
-# ZMK Build Configuration
-matrix:
-  include:
-    - board: nice_nano_v2
+# config/build.yaml
+---
+include:
+  - board: supermini_nrf52840
+    shield: DEIN_TASTATUR_SHIELD_LEFT
+  - board: supermini_nrf52840
+    shield: DEIN_TASTATUR_SHIELD_RIGHT
+  - board: supermini_nrf52840
+    shield: settings_reset
