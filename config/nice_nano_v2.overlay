@@ -1,52 +1,57 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 
+/*
+ * MyKeyboard - 46 Tasten, 4 Rows x 12 Cols (unterste Reihe teilweise leer)
+ * diode-direction = col2row: Dioden sitzen zwischen Switch und Row-Leitung,
+ * Strom fliesst von Col -> Switch -> Diode -> Row
+ */
+
 / {
     chosen {
         zmk,kscan = &kscan0;
         zmk,matrix-transform = &default_transform;
     };
 
-    default_transform: matrix_transform {
-        compatible = "zmk,matrix-transform";
-        rows = <4>;
-        columns = <12>;
+    kscan0: kscan {
+        compatible = "zmk,kscan-gpio-matrix";
+        wakeup-source;
+        diode-direction = "col2row";
 
-        // Definiert die elektronischen Schnittstellen für alle 44 physischen Tasten
-        map = <
-            RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4) RC(0,5) RC(0,6) RC(0,7) RC(0,8) RC(0,9) RC(0,10) RC(0,11)
-            RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5) RC(1,6) RC(1,7) RC(1,8) RC(1,9) RC(1,10) RC(1,11)
-            RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5) RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11)
-            RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(3,6) RC(3,7) RC(3,8) RC(3,9) RC(3,10) RC(3,11)
-        >;
+        // Horizontal-Pins = Row 0..3 (Output)
+        row-gpios
+            = <&pro_micro 24 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 22 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 20 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 17 GPIO_ACTIVE_HIGH>
+            ;
+
+        // Vertikal-Pins = Col 0..11 (Input mit Pull-Down)
+        col-gpios
+            = <&pro_micro 31 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 2  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 47 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 45 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 43 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 9  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 38 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 36 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 32 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
     };
 
-    kscan0: kscan_composite {
-        compatible = "zmk,kscan-gpio-matrix";
-        label = "KSCAN";
-        diode-direction = "row2col"; // Falls Tasten später nicht reagieren, in "row2col" ändern
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        columns = <12>;
+        rows = <4>;
 
-        // Horizontale Pins (Rows 1-4)
-        row-gpios
-            = <&gpio0 24 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Reihe 1
-            , <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Reihe 2
-            , <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Reihe 3
-            , <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Reihe 4
-            ;
-
-        // Vertikale Pins (Cols 1-12)
-        col-gpios
-            = <&gpio0 31 GPIO_ACTIVE_HIGH> // Spalte 1
-            , <&gpio0 29 GPIO_ACTIVE_HIGH> // Spalte 2
-            , <&gpio0 2  GPIO_ACTIVE_HIGH> // Spalte 3
-            , <&gpio1 15 GPIO_ACTIVE_HIGH> // Spalte 4
-            , <&gpio1 13 GPIO_ACTIVE_HIGH> // Spalte 5
-            , <&gpio1 11 GPIO_ACTIVE_HIGH> // Spalte 6
-            , <&gpio0 10 GPIO_ACTIVE_HIGH> // Spalte 7
-            , <&gpio0 9  GPIO_ACTIVE_HIGH> // Spalte 8
-            , <&gpio1 6  GPIO_ACTIVE_HIGH> // Spalte 9
-            , <&gpio1 4  GPIO_ACTIVE_HIGH> // Spalte 10
-            , <&gpio0 11 GPIO_ACTIVE_HIGH> // Spalte 11
-            , <&gpio1 0  GPIO_ACTIVE_HIGH> // Spalte 12
-            ;
+        map = <
+RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4) RC(0,5) RC(0,6) RC(0,7) RC(0,8) RC(0,9) RC(0,10) RC(0,11)
+RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5) RC(1,6) RC(1,7) RC(1,8) RC(1,9) RC(1,10) RC(1,11)
+RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5) RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11)
+RC(3,0) RC(3,1) RC(3,2)                 RC(3,4) RC(3,5) RC(3,6)                 RC(3,8) RC(3,9) RC(3,10) RC(3,11)
+        >;
     };
 };
